@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Presença - Futebol</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Lista de Presença - Futebol</h1>
+
+    <form action="/adicionar" method="POST">
+        <input type="text" name="nome" placeholder="Nome do jogador" required>
+        <button type="submit">Adicionar Jogador</button>
+    </form>
+
+    <h2>Jogadores</h2>
+    <ul>
+        {% for jogador in jogadores %}
+            <li>
+                {{ jogador.nome }} - 
+                {% if jogador.presente %}
+                    <strong>Presente</strong>
+                {% else %}
+                    <strong>Ausente</strong>
+                {% endif %}
+                <a href="/marcar_presenca/{{ jogador.id }}">Marcar Presença</a>
+                | 
+                <a href="/excluir/{{ jogador.id }}" onclick="return confirm('Tem certeza que deseja excluir este jogador?')">Excluir</a>
+            </li>
+        {% else %}
+            <li>Nenhum jogador adicionado ainda.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
