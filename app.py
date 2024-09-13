@@ -23,7 +23,9 @@ with app.app_context():
 @app.route('/')
 def index():
     jogadores = Jogador.query.all()  # Carrega todos os jogadores do banco de dados
-    return render_template('index.html', jogadores=jogadores)
+    total_jogadores = len(jogadores)  # Conta o número total de jogadores
+    jogadores_faltando = 15 - total_jogadores  # Calcula quantos jogadores faltam para completar 15
+    return render_template('index.html', jogadores=jogadores, jogadores_faltando=jogadores_faltando)
 
 @app.route('/adicionar', methods=['POST'])
 def adicionar_jogador():
@@ -52,3 +54,4 @@ def excluir_jogador(id):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
