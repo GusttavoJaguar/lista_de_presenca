@@ -20,7 +20,7 @@
     <ul>
         {% for numero, jogador in jogadores %}
             <li>
-                Jogador {{ numero }}: {{ jogador.nome }} - 
+                <strong>Jogador {{ numero }}:</strong> {{ jogador.nome }} - 
                 {% if jogador.presente %}
                     <strong>Presente</strong>
                 {% else %}
