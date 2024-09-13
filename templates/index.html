@@ -18,9 +18,9 @@
     <p>Faltam <strong>{{ jogadores_faltando }}</strong> jogadores para completar o grupo de 15.</p>
 
     <ul>
-        {% for jogador in jogadores %}
+        {% for numero, jogador in jogadores %}
             <li>
-                {{ jogador.nome }} - 
+                Jogador {{ numero }}: {{ jogador.nome }} - 
                 {% if jogador.presente %}
                     <strong>Presente</strong>
                 {% else %}

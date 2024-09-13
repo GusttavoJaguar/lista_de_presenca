@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 
@@ -9,6 +10,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Inicializando o banco de dados
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 # Definindo o modelo para a tabela de jogadores
 class Jogador(db.Model):
@@ -25,7 +27,8 @@ def index():
     jogadores = Jogador.query.all()  # Carrega todos os jogadores do banco de dados
     total_jogadores = len(jogadores)  # Conta o número total de jogadores
     jogadores_faltando = 15 - total_jogadores  # Calcula quantos jogadores faltam para completar 15
-    return render_template('index.html', jogadores=jogadores, jogadores_faltando=jogadores_faltando)
+    jogadores_com_numero = [(i + 1, jogador) for i, jogador in enumerate(jogadores)]  # Adiciona numeração
+    return render_template('index.html', jogadores=jogadores_com_numero, jogadores_faltando=jogadores_faltando)
 
 @app.route('/adicionar', methods=['POST'])
 def adicionar_jogador():
@@ -54,4 +57,3 @@ def excluir_jogador(id):
 
 if __name__ == '__main__':
     app.run(debug=True)
-
