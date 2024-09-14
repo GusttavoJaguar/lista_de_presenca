@@ -22,6 +22,18 @@ class Jogador(db.Model):
 with app.app_context():
     db.create_all()
 
+def ler_jogadores_arquivo():
+    try:
+        with open('jogadores.txt', 'r') as file:
+            return [linha.strip() for linha in file.readlines()]
+    except FileNotFoundError:
+        return []
+
+def salvar_jogadores_arquivo(jogadores):
+    with open('jogadores.txt', 'w') as file:
+        for jogador in jogadores:
+            file.write(f"{jogador}\n")
+
 @app.route('/')
 def index():
     jogadores = Jogador.query.all()  # Carrega todos os jogadores do banco de dados
@@ -37,6 +49,12 @@ def adicionar_jogador():
         novo_jogador = Jogador(nome=nome)
         db.session.add(novo_jogador)  # Adiciona o jogador ao banco
         db.session.commit()  # Confirma a inserção
+
+        # Atualiza o arquivo
+        jogadores = ler_jogadores_arquivo()
+        jogadores.append(nome)
+        salvar_jogadores_arquivo(jogadores)
+
     return redirect(url_for('index'))
 
 @app.route('/marcar_presenca/<int:id>')
@@ -53,6 +71,12 @@ def excluir_jogador(id):
     if jogador:  # Verifica se o jogador existe
         db.session.delete(jogador)  # Remove o jogador do banco de dados
         db.session.commit()  # Confirma a exclusão
+
+        # Atualiza o arquivo
+        jogadores = ler_jogadores_arquivo()
+        jogadores = [j for j in jogadores if j != jogador.nome]
+        salvar_jogadores_arquivo(jogadores)
+
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
